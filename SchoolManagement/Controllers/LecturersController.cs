@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -10,109 +11,108 @@ using SchoolManagement.Models;
 
 namespace SchoolManagement.Controllers
 {
-   
-    public class CoursesController : Controller
+    public class LecturersController : Controller
     {
         private SchoolManagement_DBEntities2 db = new SchoolManagement_DBEntities2();
 
-        // GET: Courses
-        public ActionResult Index()
+        // GET: Lecturers
+        public async Task<ActionResult> Index()
         {
-            return View(db.Courses.ToList());
+            return View(await db.Lecturers.ToListAsync());
         }
 
-        // GET: Courses/Details/5
-        public ActionResult Details(int? id)
+        // GET: Lecturers/Details/5
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = db.Courses.Find(id);
-            if (course == null)
+            Lecturer lecturer = await db.Lecturers.FindAsync(id);
+            if (lecturer == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(lecturer);
         }
 
-        // GET: Courses/Create
+        // GET: Lecturers/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Courses/Create
+        // POST: Lecturers/Create
         // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour 
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CourseID,Title,Credits")] Course course)
+        public async Task<ActionResult> Create([Bind(Include = "Id,First_Name,Last_Name")] Lecturer lecturer)
         {
             if (ModelState.IsValid)
             {
-                db.Courses.Add(course);
-                db.SaveChanges();
+                db.Lecturers.Add(lecturer);
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(course);
+            return View(lecturer);
         }
 
-        // GET: Courses/Edit/5
-        public ActionResult Edit(int? id)
+        // GET: Lecturers/Edit/5
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = db.Courses.Find(id);
-            if (course == null)
+            Lecturer lecturer = await db.Lecturers.FindAsync(id);
+            if (lecturer == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(lecturer);
         }
 
-        // POST: Courses/Edit/5
+        // POST: Lecturers/Edit/5
         // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour 
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CourseID,Title,Credits")] Course course)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,First_Name,Last_Name")] Lecturer lecturer)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(course).State = EntityState.Modified;
-                db.SaveChanges();
+                db.Entry(lecturer).State = EntityState.Modified;
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(course);
+            return View(lecturer);
         }
 
-        // GET: Courses/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: Lecturers/Delete/5
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = db.Courses.Find(id);
-            if (course == null)
+            Lecturer lecturer = await db.Lecturers.FindAsync(id);
+            if (lecturer == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            return View(lecturer);
         }
 
-        // POST: Courses/Delete/5
+        // POST: Lecturers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Course course = db.Courses.Find(id);
-            db.Courses.Remove(course);
-            db.SaveChanges();
+            Lecturer lecturer = await db.Lecturers.FindAsync(id);
+            db.Lecturers.Remove(lecturer);
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

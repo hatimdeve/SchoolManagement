@@ -12,16 +12,19 @@ namespace SchoolManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Enrollment
+    public partial class Lecturer
     {
-        public int EnrollmentID { get; set; }
-        public Nullable<decimal> Grade { get; set; }
-        public int CourseID { get; set; }
-        public int StudentID { get; set; }
-        public Nullable<int> LecturerID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Lecturer()
+        {
+            this.Enrollments = new HashSet<Enrollment>();
+        }
     
-        public virtual Course Course { get; set; }
-        public virtual Student Student { get; set; }
-        public virtual Lecturer Lecturer { get; set; }
+        public int Id { get; set; }
+        public string First_Name { get; set; }
+        public string Last_Name { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
     }
 }

@@ -11,109 +11,120 @@ using SchoolManagement.Models;
 
 namespace SchoolManagement.Controllers
 {
-   
-    public class StudentsController : Controller
+    public class EnrollmentsController : Controller
     {
         private SchoolManagement_DBEntities2 db = new SchoolManagement_DBEntities2();
 
-        // GET: Students
-        [AllowAnonymous]
+        // GET: Enrollments
         public async Task<ActionResult> Index()
         {
-            return View(await db.Students.ToListAsync());
+            var enrollments = db.Enrollments.Include(e => e.Course).Include(e => e.Student).Include(e => e.Lecturer);
+            return View(await enrollments.ToListAsync());
         }
 
-        // GET: Students/Details/5
+        // GET: Enrollments/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = await db.Students.FindAsync(id);
-            if (student == null)
+            Enrollment enrollment = await db.Enrollments.FindAsync(id);
+            if (enrollment == null)
             {
                 return HttpNotFound();
             }
-            return View(student);
+            return View(enrollment);
         }
 
-        // GET: Students/Create
+        // GET: Enrollments/Create
         public ActionResult Create()
         {
+            ViewBag.CourseID = new SelectList(db.Courses, "CourseID", "Title");
+            ViewBag.StudentID = new SelectList(db.Students, "StudentID", "LastName");
+            ViewBag.LecturerID = new SelectList(db.Lecturers, "Id", "First_Name");
             return View();
         }
 
-        // POST: Students/Create
+        // POST: Enrollments/Create
         // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour 
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "StudentID,LastName,FirstName,EnrollmentDate,MiddleName")] Student student)
+        public async Task<ActionResult> Create([Bind(Include = "EnrollmentID,Grade,CourseID,StudentID,LecturerID")] Enrollment enrollment)
         {
             if (ModelState.IsValid)
             {
-                db.Students.Add(student);
+                db.Enrollments.Add(enrollment);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(student);
+            ViewBag.CourseID = new SelectList(db.Courses, "CourseID", "Title", enrollment.CourseID);
+            ViewBag.StudentID = new SelectList(db.Students, "StudentID", "LastName", enrollment.StudentID);
+            ViewBag.LecturerID = new SelectList(db.Lecturers, "Id", "First_Name", enrollment.LecturerID);
+            return View(enrollment);
         }
 
-        // GET: Students/Edit/5
+        // GET: Enrollments/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = await db.Students.FindAsync(id);
-            if (student == null)
+            Enrollment enrollment = await db.Enrollments.FindAsync(id);
+            if (enrollment == null)
             {
                 return HttpNotFound();
             }
-            return View(student);
+            ViewBag.CourseID = new SelectList(db.Courses, "CourseID", "Title", enrollment.CourseID);
+            ViewBag.StudentID = new SelectList(db.Students, "StudentID", "LastName", enrollment.StudentID);
+            ViewBag.LecturerID = new SelectList(db.Lecturers, "Id", "First_Name", enrollment.LecturerID);
+            return View(enrollment);
         }
 
-        // POST: Students/Edit/5
+        // POST: Enrollments/Edit/5
         // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour 
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "StudentID,LastName,FirstName,EnrollmentDate,MiddleName")] Student student)
+        public async Task<ActionResult> Edit([Bind(Include = "EnrollmentID,Grade,CourseID,StudentID,LecturerID")] Enrollment enrollment)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(student).State = EntityState.Modified;
+                db.Entry(enrollment).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(student);
+            ViewBag.CourseID = new SelectList(db.Courses, "CourseID", "Title", enrollment.CourseID);
+            ViewBag.StudentID = new SelectList(db.Students, "StudentID", "LastName", enrollment.StudentID);
+            ViewBag.LecturerID = new SelectList(db.Lecturers, "Id", "First_Name", enrollment.LecturerID);
+            return View(enrollment);
         }
 
-        // GET: Students/Delete/5
+        // GET: Enrollments/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Student student = await db.Students.FindAsync(id);
-            if (student == null)
+            Enrollment enrollment = await db.Enrollments.FindAsync(id);
+            if (enrollment == null)
             {
                 return HttpNotFound();
             }
-            return View(student);
+            return View(enrollment);
         }
 
-        // POST: Students/Delete/5
+        // POST: Enrollments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Student student = await db.Students.FindAsync(id);
-            db.Students.Remove(student);
+            Enrollment enrollment = await db.Enrollments.FindAsync(id);
+            db.Enrollments.Remove(enrollment);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

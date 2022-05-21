@@ -172,7 +172,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LecturersController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -191,6 +193,9 @@
       <DependentUpon>SchoolManagmentDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Lecturer.cs">
+      <DependentUpon>SchoolManagmentDBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MetaClasses\CoursesMetadat.cs" />
     <Compile Include="Models\MetaClasses\StudentsMetadata.cs" />
@@ -303,6 +308,16 @@
     <Content Include="Views\Students\Details.cshtml" />
     <Content Include="Views\Students\Edit.cshtml" />
     <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\Lecturers\Create.cshtml" />
+    <Content Include="Views\Lecturers\Delete.cshtml" />
+    <Content Include="Views\Lecturers\Details.cshtml" />
+    <Content Include="Views\Lecturers\Edit.cshtml" />
+    <Content Include="Views\Lecturers\Index.cshtml" />
+    <Content Include="Views\Enrollments\Create.cshtml" />
+    <Content Include="Views\Enrollments\Delete.cshtml" />
+    <Content Include="Views\Enrollments\Details.cshtml" />
+    <Content Include="Views\Enrollments\Edit.cshtml" />
+    <Content Include="Views\Enrollments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
