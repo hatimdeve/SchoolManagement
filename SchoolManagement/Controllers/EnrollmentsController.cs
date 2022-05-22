@@ -21,7 +21,13 @@ namespace SchoolManagement.Controllers
             var enrollments = db.Enrollments.Include(e => e.Course).Include(e => e.Student).Include(e => e.Lecturer);
             return View(await enrollments.ToListAsync());
         }
-
+        public PartialViewResult _enrollmentPartiel( int? courseid)
+        {
+            var enrollments = db.Enrollments.Where(q => q.CourseID == courseid)
+                .Include(e => e.Student)
+                .Include(_ => _.Course);
+            return PartialView(enrollments.ToList());
+        }
         // GET: Enrollments/Details/5
         public async Task<ActionResult> Details(int? id)
         {
@@ -128,6 +134,27 @@ namespace SchoolManagement.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public async Task<JsonResult> AddStudent([Bind(Include = "CourseID,StudentID")] Enrollment enrollment)
+        {
+            try
+            {
+                var isenrolled = db.Enrollments.Any(q => q.CourseID == enrollment.CourseID && q.StudentID == enrollment.StudentID);
+                if (ModelState.IsValid && !isenrolled)
+                {
+                    db.Enrollments.Add(enrollment);
+                    await db.SaveChangesAsync();
+                    return Json( new { IsSucess = true ,Message =" student added succefully"},JsonRequestBehavior.AllowGet);
+                }
+                return Json(new { IsSucess = false, Message = " student already enrolled" }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception )
+            {
+                return Json(new { IsSucess = false, Message = " system failure" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         public JsonResult GetStudents( string term)
         {
